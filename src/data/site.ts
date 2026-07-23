@@ -12,8 +12,8 @@ export const site = {
   initials: "JV",
   role: "Business Intelligence · Data Analytics",
   roles: ["Business Intelligence", "Data Analytics"],
-  // Update to the production domain before deploying.
-  url: "https://moraesanalytics.com",
+  // Swap for the custom domain when it's purchased.
+  url: "https://portfolio-moraesanalytics.vercel.app",
   email: "contato.moraes.analytics@gmail.com",
   location: "Brazil",
   description:
