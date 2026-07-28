@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { site } from "@/data/site";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { HeroHighlights } from "@/components/ui/HeroHighlights";
 import { fadeUp } from "@/lib/motion";
 
 export function Hero() {
@@ -14,6 +15,7 @@ export function Hero() {
       className="relative flex min-h-svh items-center pt-16 md:pt-[4.5rem]"
     >
       <Container>
+        <div className="grid items-center gap-16 lg:grid-cols-[1.25fr_1fr]">
         <div className="max-w-3xl">
           <motion.p
             variants={fadeUp}
@@ -63,6 +65,9 @@ export function Hero() {
               <ArrowUpRight className="size-4" strokeWidth={1.75} />
             </Button>
           </motion.div>
+        </div>
+
+        <HeroHighlights />
         </div>
       </Container>
 
