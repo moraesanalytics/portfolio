@@ -1,46 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Database, Lightbulb, MonitorCheck } from "lucide-react";
-import { fadeUp } from "@/lib/motion";
+import { EASE, fadeUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { IconComponent } from "@/types";
 
 interface Highlight {
   icon: IconComponent;
   label: string;
-  position: string;
-  size: string;
-  floatDelay: number;
 }
 
 const highlights: Highlight[] = [
-  {
-    icon: MonitorCheck,
-    label: "Dashboards",
-    position: "left-2 top-6",
-    size: "size-32",
-    floatDelay: 0,
-  },
-  {
-    icon: Database,
-    label: "Data & Modeling",
-    position: "bottom-4 left-32",
-    size: "size-24",
-    floatDelay: 2.2,
-  },
-  {
-    icon: Lightbulb,
-    label: "Business Intelligence",
-    position: "right-6 top-14",
-    size: "size-36",
-    floatDelay: 1.1,
-  },
+  { icon: MonitorCheck, label: "Dashboards" },
+  { icon: Database, label: "Data & Modeling" },
+  { icon: Lightbulb, label: "Business Intelligence" },
+];
+
+const ROTATE_MS = 3500;
+
+// Slot 0 = center (highlighted), 1 = right, 2 = left.
+const slots = [
+  { x: 0, scale: 1.12, opacity: 1, zIndex: 2 },
+  { x: 160, scale: 0.6, opacity: 0.25, zIndex: 1 },
+  { x: -160, scale: 0.6, opacity: 0.25, zIndex: 1 },
 ];
 
 export function HeroHighlights() {
-  const [active, setActive] = useState<number | null>(null);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(
+      () => setActive((current) => (current + 1) % highlights.length),
+      ROTATE_MS
+    );
+    return () => clearInterval(id);
+  }, [paused]);
 
   return (
     <motion.div
@@ -48,40 +46,49 @@ export function HeroHighlights() {
       initial="hidden"
       animate="visible"
       custom={0.55}
-      onMouseLeave={() => setActive(null)}
-      className="relative hidden h-[24rem] lg:block"
-      aria-hidden="true"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative hidden h-80 items-center justify-center lg:flex"
     >
       {highlights.map((highlight, index) => {
-        const isActive = active === index;
-        const isDimmed = active !== null && !isActive;
+        const slot = slots[(index - active + highlights.length) % highlights.length];
+        const isCenter = slot.zIndex === 2;
 
         return (
-          <motion.div
+          <motion.button
             key={highlight.label}
-            animate={{ y: [0, -10, 0] }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: highlight.floatDelay,
-            }}
-            onMouseEnter={() => setActive(index)}
-            className={cn("absolute cursor-default", highlight.position)}
-            title={highlight.label}
+            type="button"
+            aria-label={highlight.label}
+            onClick={() => setActive(index)}
+            animate={{ x: slot.x, scale: slot.scale, opacity: slot.opacity }}
+            transition={{ duration: 0.7, ease: EASE }}
+            style={{ zIndex: slot.zIndex }}
+            className={cn("absolute", !isCenter && "cursor-pointer")}
           >
             <highlight.icon
               strokeWidth={1.1}
               className={cn(
-                "text-accent transition-all duration-500",
-                highlight.size,
-                isActive && "scale-110 drop-shadow-[0_12px_24px_rgb(78_102_93_/_0.25)]",
-                isDimmed ? "opacity-20" : "opacity-90"
+                "size-36 text-accent transition-[filter] duration-500",
+                isCenter &&
+                  "drop-shadow-[0_16px_32px_rgb(78_102_93_/_0.25)]"
               )}
             />
-          </motion.div>
+          </motion.button>
         );
       })}
+
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={active}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="absolute bottom-6 text-xs font-semibold uppercase tracking-[0.2em] text-muted"
+        >
+          {highlights[active].label}
+        </motion.p>
+      </AnimatePresence>
     </motion.div>
   );
 }
