@@ -8,8 +8,9 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import profile1 from "@/assets/profile.png";
 import profile2 from "@/assets/profile-2.jpeg";
+import profile3 from "@/assets/profile-3.jpeg";
 
-const photos: StaticImageData[] = [profile1, profile2];
+const photos: StaticImageData[] = [profile1, profile2, profile3];
 const AUTOPLAY_MS = 9000;
 const SWIPE_DISTANCE = 60;
 const SWIPE_VELOCITY = 400;
