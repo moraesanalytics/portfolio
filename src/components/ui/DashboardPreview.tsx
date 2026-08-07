@@ -33,8 +33,9 @@ export function DashboardPreview({ onLaunch }: DashboardPreviewProps) {
           placeholder="blur"
           priority={false}
         />
-        <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/30">
-          <span className="flex translate-y-2 items-center gap-2 rounded-full bg-surface px-5 py-2.5 text-sm font-medium text-body opacity-0 shadow-soft-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        {/* Overlay: always visible on touch screens, hover-revealed on desktop */}
+        <span className="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors duration-300 md:bg-black/0 md:group-hover:bg-black/30">
+          <span className="flex items-center gap-2 rounded-full bg-surface px-5 py-2.5 text-sm font-medium text-body opacity-100 shadow-soft-lg transition-all duration-300 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
             <Play className="size-4 text-accent" strokeWidth={1.75} />
             Launch Interactive Demo
           </span>
