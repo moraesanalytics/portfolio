@@ -71,7 +71,7 @@ function DemoDialog({
         className="relative flex h-full w-full max-w-[1700px] flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-soft-lg"
       >
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 md:px-6">
+        <div className="relative flex items-center justify-between gap-3 border-b border-line px-4 py-3 md:px-6">
           <p className="min-w-0 truncate text-sm font-semibold text-body">
             {title}
             <span className="ml-2 hidden text-xs font-normal text-muted sm:inline">
@@ -79,7 +79,7 @@ function DemoDialog({
             </span>
           </p>
 
-          <div className="hidden items-center rounded-full border border-line p-1 md:flex">
+          <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center rounded-full border border-line p-1 md:flex">
             <button
               type="button"
               onClick={() => setMode("desktop")}
@@ -124,7 +124,7 @@ function DemoDialog({
             className={cn(
               "h-full overflow-hidden bg-white transition-all duration-500",
               mode === "mobile"
-                ? "w-full rounded-xl border border-line md:w-[390px] md:rounded-[2rem] md:border-8 md:border-body/90 md:shadow-soft-lg"
+                ? "w-full rounded-xl border border-line md:w-[390px] md:rounded-[2rem] md:border-8 md:border-body/90 md:shadow-soft-lg dark:md:border-white"
                 : "w-full rounded-xl border border-line"
             )}
           >

@@ -148,17 +148,34 @@ SLICERS = r"""
     function(e,pop){if(pickFrom(e,SEL.Channel)){renderAll();checklist(pop,chanKeys,SEL.Channel);refresh();}},
     function(){return sum(SEL.Channel,chanKeys.length);});
 
+  function yearMonths(y){return MONTHS.filter(function(m){return m.y===y;});}
   function renderMonths(pop){
     var h="<div class='slc-it' data-k='*'><span class='slc-cb"+(!cnt(mSel)?" on":"")+"'></span>All</div>",py=null;
     MONTHS.forEach(function(m){
-      if(m.y!==py){h+="<div class='slc-yr'>"+m.y+"</div>";py=m.y;}
-      h+="<div class='slc-it' data-k='"+m.k+"'><span class='slc-cb"+(mSel[m.k]?" on":"")+"'></span>"+m.m+"</div>";
+      if(m.y!==py){
+        py=m.y;
+        var yrAll=yearMonths(m.y).every(function(x){return mSel[x.k];});
+        h+="<div class='slc-it slc-yri' data-y='"+m.y+"'><span class='slc-cb"+(yrAll?" on":"")+"'></span><b>"+m.y+"</b></div>";
+      }
+      h+="<div class='slc-it slc-mi' data-k='"+m.k+"'><span class='slc-cb"+(mSel[m.k]?" on":"")+"'></span>"+m.m+"</div>";
     });
     pop.innerHTML=h;
   }
   var sMon=mkSlicer('Year / Month',
     renderMonths,
-    function(e,pop){if(pickFrom(e,mSel)){setBase(Object.keys(mSel).map(Number));renderMonths(pop);refresh();}},
+    function(e,pop){
+      var it=e.target.closest('.slc-it');if(!it)return;
+      var y=it.getAttribute('data-y');
+      if(y){
+        // year row toggles every month of that year at once
+        var ms=yearMonths(+y);
+        var all=ms.every(function(m){return mSel[m.k];});
+        ms.forEach(function(m){if(all)delete mSel[m.k];else mSel[m.k]=1;});
+      }else if(!pickFrom(e,mSel)){
+        return;
+      }
+      setBase(Object.keys(mSel).map(Number));renderMonths(pop);refresh();
+    },
     function(){return cnt(mSel)?cnt(mSel)+' selected':'All';});
 
   function refresh(){sCat.update();sChan.update();sMon.update();}
@@ -181,7 +198,9 @@ SLICER_CSS = """
 .slc-it:hover{background:#F4F6FA}
 .slc-cb{width:14px;height:14px;flex:none;border:1.5px solid #CBD5E1;border-radius:4px;background:#fff}
 .slc-cb.on{background:#6366F1;border-color:#6366F1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");background-size:10px;background-position:center;background-repeat:no-repeat}
-.slc-yr{font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em;padding:8px 9px 2px}
+.slc-it.slc-yri{margin-top:3px;border-top:1px solid #F1F5F9;padding-top:7px}
+.slc-it.slc-yri b{font-size:11px;font-weight:700;color:#475569;letter-spacing:.04em}
+.slc-it.slc-mi{margin-left:14px}
 """
 
 # The desktop page targets a fixed 1600px-wide Power BI visual: scale to fit.
@@ -215,9 +234,11 @@ MOBILE_SHIM = f"""
 html{{overflow-x:hidden!important;overflow-y:auto!important;background:#F8FAFC!important}}
 body{{overflow:visible!important;background:#F8FAFC!important}}
 .pg{{max-width:480px;margin:0 auto}}
-.pg-slot{{height:auto!important;padding:2px 0}}
+/* keep the three slicers on a single centered row */
+.pg-slot{{height:auto!important;padding:2px 0;justify-content:center!important;flex-wrap:nowrap!important;gap:6px!important}}
 {SLICER_CSS}
-.slc-btn{{padding:6px 10px;font-size:11px}}
+.slc-btn{{padding:5px 8px;font-size:10px;gap:4px;border-radius:8px}}
+.slc-btn i{{font-size:9px}}
 .slc-pop{{max-height:260px}}
 </style>
 """
