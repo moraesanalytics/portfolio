@@ -124,7 +124,7 @@ function DemoDialog({
             className={cn(
               "h-full overflow-hidden bg-white transition-all duration-500",
               mode === "mobile"
-                ? "w-full rounded-xl border border-line md:w-[390px] md:rounded-[2rem] md:border-8 md:border-body/90 md:shadow-soft-lg dark:md:border-white"
+                ? "w-full rounded-xl border border-line md:w-[390px] md:rounded-[2rem] md:border-8 md:border-body/90 md:shadow-soft-lg dark:md:border-[#F8F9F8]"
                 : "w-full rounded-xl border border-line"
             )}
           >
