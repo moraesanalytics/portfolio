@@ -40,6 +40,7 @@ export const featuredProject: FeaturedProject = {
   repositoryUrl:
     "https://github.com/moraesanalytics/northwind-distribution-analytics",
   demoUrl: "/demo/index.html",
+  demoMobileUrl: "/demo/mobile/index.html",
   stats: [
     { label: "DAX measures", value: "74" },
     { label: "Fact rows", value: "2,431" },

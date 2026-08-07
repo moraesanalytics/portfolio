@@ -113,6 +113,7 @@ export function FeaturedProject() {
         open={demoOpen}
         onClose={() => setDemoOpen(false)}
         url={featuredProject.demoUrl}
+        mobileUrl={featuredProject.demoMobileUrl}
         title={featuredProject.name}
       />
     </section>

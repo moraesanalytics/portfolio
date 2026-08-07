@@ -270,6 +270,99 @@ table.mx tfoot .cell{cursor:default}
 .mx-tip .t2{font-size:10px;color:#94A3B8;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 .mx-tip .t3{font-size:17px;font-weight:800;color:#4F46E5;margin-top:6px}
 </style>
+
+<style>
+/* ================= MOBILE OVERRIDES  (400 x ~3200 portrait) =================
+   O layout desktop e reaproveitado inteiro; aqui so empilhamos tudo em
+   coluna unica e reduzimos tamanhos para caber num celular. */
+.pg{display:flex;flex-direction:column;gap:9px;padding:12px;grid-template-rows:none}
+.pg-head{flex-direction:column;align-items:stretch;gap:6px}
+.pg-ttl{flex:none}
+.pg-h1{font-size:19px}
+.pg-h2{font-size:10.5px}
+.pg-sub{flex-wrap:wrap;gap:6px}
+/* faixa reservada para os slicers NATIVOS do Power BI (ficam por cima) */
+.pg-slot{width:100%;height:24px;flex:none}
+
+/* as linhas do desktop viram pilhas verticais */
+.r2,.r3,.r4,.r5{display:flex;flex-direction:column;gap:9px}
+
+/* KPI: hero empilhado + 8 cards em 2 colunas x 4 linhas */
+#kpi{height:502px}
+.mk{gap:12px}
+.mk-hero{flex-direction:column;align-items:flex-start;gap:8px;padding:14px 16px}
+.mk-hero>div{text-align:left!important;width:100%}
+.mk-hero .l{font-size:10px}
+.mk-hero .v{font-size:32px}
+.mk-hero .v[style]{font-size:22px!important}
+.mk-hero .d{font-size:11.5px;margin-top:6px}
+.mk-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr)}
+.mk-card{padding:11px 13px;gap:4px}
+.mk-card .v{font-size:21px}
+
+/* Insights */
+.r2>.card{height:344px}
+
+/* Graficos (trend + daily) */
+.r3>.card{height:262px}
+.rt-root{padding:12px 14px}
+.rt-t{font-size:14px}
+.rt-lg{font-size:10.5px;gap:10px}
+.rt-right{gap:10px}
+
+/* Current vs Previous: grafico em cima, 2 cards lado a lado embaixo */
+.r4>.card{height:224px}
+.cv-side{flex-direction:row;height:118px;gap:12px}
+.cv-card{padding:12px 14px}
+.cv-card .v{font-size:21px}
+.cv-card .l{font-size:10px}
+
+/* Sales Composition: 1 card por vez (as setas percorrem as 7 dimensoes) */
+.cp-root{height:286px}
+.cp-title{font-size:14px}
+.cp-grid{grid-template-columns:1fr}
+.cp-row{grid-template-columns:82px 1fr 58px}
+
+/* Tabelas: empilhadas, com rolagem horizontal */
+.r5>.card{height:280px}
+.md-root{padding:12px 14px}
+.md-title{font-size:14px}
+table.md{width:max-content;min-width:100%}
+
+/* Matriz: ferramentas empilhadas, coluna de nome estreita */
+.pg>.card{height:360px}
+.mx-root{padding:12px 14px}
+.mx-head{flex-direction:column;align-items:stretch;gap:8px}
+.mx-title{font-size:14px}
+.mx-tools{flex-wrap:wrap;gap:6px}
+.mx-sel{min-width:0;flex:1}
+.mx-search{width:auto;flex:1;min-width:110px}
+.mx-btn{flex:none}
+table.mx th.nm,table.mx td.nm{min-width:130px;max-width:130px}
+table.mx tfoot td.nm{min-width:130px}
+
+/* #1 sem a dica de filtro no subtitulo */
+.fb-hint{display:none}
+
+/* #3 graficos: largura em px (15 unidades visiveis) + rolagem horizontal dentro do grafico */
+.chart-canvas{overflow-x:auto;overflow-y:hidden}
+.chart-canvas::-webkit-scrollbar{height:6px}
+.chart-canvas::-webkit-scrollbar-thumb{background:#C7D2FE;border-radius:99px}
+.chart-canvas::-webkit-scrollbar-track{background:transparent}
+.chart-canvas>div.cv{position:relative;top:auto;left:auto;right:auto;bottom:auto;height:100%}
+
+/* #5 Products Performance: congela Curva ABC + Produto (rolagem so nas demais) */
+#tblProd thead th:nth-child(1),#tblProd tbody td:nth-child(1),#tblProd tfoot td:nth-child(1){position:sticky;left:0;background:#fff;z-index:3;min-width:50px;max-width:50px}
+#tblProd thead th:nth-child(2),#tblProd tbody td:nth-child(2),#tblProd tfoot td:nth-child(2){position:sticky;left:50px;background:#fff;z-index:3;min-width:120px;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+#tblProd thead th:nth-child(1),#tblProd thead th:nth-child(2){z-index:5}
+
+/* #6 Top Customers: congela so o nome */
+#tblCust thead th:nth-child(1),#tblCust tbody td:nth-child(1),#tblCust tfoot td:nth-child(1){position:sticky;left:0;background:#fff;z-index:3;min-width:120px;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+#tblCust thead th:nth-child(1){z-index:5}
+
+/* #7 coluna Total da matriz totalmente opaca (o padding do td deixava passar as celulas por tras) */
+table.mx td.tot{background:#fff}
+</style>
 </head>
 <body>
 <div class='pg'>
@@ -278,8 +371,7 @@ table.mx tfoot .cell{cursor:default}
     <div class='pg-ttl'>
       <div class='pg-h1'>NorthWind Distribution Analytics</div>
       <div class='pg-sub'>
-        <span class='pg-h2'>Executive Overview &middot; HTML</span>
-        <span class='pg-sep'></span>
+        <span class='pg-h2'>Executive Overview &middot; Mobile</span>
         <span class='fb' id='fbar'></span>
       </div>
     </div>
@@ -497,7 +589,7 @@ var SEL={months:{},days:{},cvp:{},Category:{},Channel:{},Brand:{},Employee:{},
          Warehouse:{},Payment:{},Segment:{},prod:{},cust:{},mx:{}};
 var LAST={};
 function cnt(o){var n=0;for(var k in o)n++;return n;}
-function modeOf(e){if(e&&e.shiftKey)return 'range';if(e&&(e.ctrlKey||e.metaKey))return 'add';return 'single';}
+function modeOf(e){return 'add';}  // mobile: cada toque alterna o item (sem teclas modificadoras)
 function pick(set,key,keys,e,lk){
   var m=modeOf(e);
   if(m==='range'&&LAST[lk]!=null&&keys.indexOf(LAST[lk])>=0){
@@ -614,7 +706,7 @@ function renderBar(){
     }
   });
   fbar.innerHTML = h ? h+`<button class='fb-clear' id='fbClear'>Clear all</button>`
-                     : `<span class='fb-hint'>Click any chart, bar, row or cell to cross-filter &middot; Ctrl = add &middot; Shift = range</span>`;
+                     : '';
   var cb=document.getElementById('fbClear');
   if(cb) cb.addEventListener('click',function(){
     GROUPS.forEach(function(g){SEL[g.key]={};});
@@ -800,6 +892,7 @@ function renderTrend(){
   var sLine=rtData.map(function(d){return d.ord;});
   var maxOrd=Math.max.apply(null,sLine.concat([1]));
   var maxRev=Math.max.apply(null,sBar.concat([1]));
+  var _vw=(cv.clientWidth||360),_per=_vw/15,cw=Math.max(_vw,Math.round(rtData.length*_per));el.style.width=cw+'px';
 
   if(rtChart){try{rtChart.destroy();}catch(e){}}
   el.innerHTML='';
@@ -809,10 +902,11 @@ function renderTrend(){
     rtOv.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:40';
     cv.appendChild(rtOv);
   }
+  rtOv.style.width=cw+'px';
   rtChart=new ApexCharts(el,{
    series:[{name:'Orders',type:'line',yAxisIndex:0,data:sLine},
            {name:'Revenue',type:'bar',yAxisIndex:1,data:sBar}],
-   chart:{type:'line',height:'100%',width:'100%',toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
+   chart:{type:'line',height:'100%',width:cw,toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
      animations:anim(rtAnim),parentHeightOffset:0,redrawOnParentResize:false,redrawOnWindowResize:false,
      zoom:{enabled:false},selection:{enabled:false},pan:{enabled:false}},
    colors:['#0EA5E9','#6366F1'],
@@ -866,8 +960,8 @@ function paintTrend(){
       if(SEL.months[rtData[q2].k]&&SEL.months[rtData[q2+1].k]&&marks[q2]&&marks[q2+1]){
         var ra=marks[q2].getBoundingClientRect(),rb=marks[q2+1].getBoundingClientRect();
         var ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-        ln.setAttribute('x1',(ra.left+ra.right)/2-rc.left);ln.setAttribute('y1',(ra.top+ra.bottom)/2-rc.top);
-        ln.setAttribute('x2',(rb.left+rb.right)/2-rc.left);ln.setAttribute('y2',(rb.top+rb.bottom)/2-rc.top);
+        ln.setAttribute('x1',(ra.left+ra.right)/2-rc.left+cv.scrollLeft);ln.setAttribute('y1',(ra.top+ra.bottom)/2-rc.top);
+        ln.setAttribute('x2',(rb.left+rb.right)/2-rc.left+cv.scrollLeft);ln.setAttribute('y2',(rb.top+rb.bottom)/2-rc.top);
         ln.setAttribute('stroke','#0EA5E9');ln.setAttribute('stroke-width','2.8');ln.setAttribute('stroke-linecap','round');
         rtOv.appendChild(ln);
       }
@@ -925,6 +1019,7 @@ function renderDaily(){
   var ma=dpDays.map(function(x){return x.ma;});
   var maxRev=Math.max.apply(null,rev.concat([1]));
   var maxMA=Math.max.apply(null,ma.concat([1]));
+  var _vw=(cv.clientWidth||360),_per=_vw/15,cw=Math.max(_vw,Math.round(dpDays.length*_per));el.style.width=cw+'px';
   var lbl=MLBL[mk]?MONTHS.filter(function(m){return m.k===mk;})[0]:null;
   var lblTxt=lbl?(lbl.m+' '+lbl.y):String(mk);
 
@@ -934,7 +1029,7 @@ function renderDaily(){
   dpChart=new ApexCharts(el,{
    series:[{name:'7-day avg',type:'line',yAxisIndex:0,data:ma},
            {name:'Revenue',type:'bar',yAxisIndex:1,data:rev}],
-   chart:{type:'line',height:'100%',width:'100%',toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
+   chart:{type:'line',height:'100%',width:cw,toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
      animations:anim(dpAnim),parentHeightOffset:0,redrawOnParentResize:false,redrawOnWindowResize:false,
      zoom:{enabled:false},selection:{enabled:false},pan:{enabled:false}},
    colors:['#94A3B8','#6366F1'],
@@ -1047,6 +1142,7 @@ function renderCvp(){
     cvDays.push({d:d2,c:vc,p:vp});
   }
   var mx=Math.max.apply(null,sC.concat(sP).map(function(x){return x||0;}).concat([1]));
+  var _vw=(cv.clientWidth||360),_per=_vw/15,cw=Math.max(_vw,Math.round(cvNd*_per));el.style.width=cw+'px';
 
   document.getElementById('cvLblC').textContent='Current Month'+(MLBL[cm]?' · '+MLBL[cm]:'');
   document.getElementById('cvLblP').textContent='Previous Month'+(MLBL[pm]?' · '+MLBL[pm]:'');
@@ -1067,7 +1163,7 @@ function renderCvp(){
   if(!cvTip){cvTip=document.createElement('div');cvTip.className='rt-tip';cv.appendChild(cvTip);}
   cvChart=new ApexCharts(el,{
    series:[{name:'Current Month',data:sC},{name:'Previous Month',data:sP}],
-   chart:{type:'bar',height:'100%',width:'100%',toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
+   chart:{type:'bar',height:'100%',width:cw,toolbar:{show:false},fontFamily:'Segoe UI,system-ui,sans-serif',
      animations:anim(cvAnim),parentHeightOffset:0,redrawOnParentResize:false,redrawOnWindowResize:false,
      zoom:{enabled:false},selection:{enabled:false}},
    colors:['#6366F1','#C7D2FE'],
@@ -1159,7 +1255,7 @@ var cpStart=0,MAXBARS=4,GAP=10;
 var cpSeq=true, cpSlide=0;
 function renderComp(){
   var grid=document.getElementById('cpGrid'),h='';
-  for(var s=0;s<4;s++){
+  for(var s=0;s<1;s++){  // mobile: 1 card por vez
     var dim=DIMS[(cpStart+s)%DIMS.length];
     var src=rowsFor(dim.k);                  // nao se filtra a si mesmo
     var g=groupBy(src,dim.f);
@@ -1728,8 +1824,9 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
 
 <style>
 html{overflow-x:hidden!important;overflow-y:auto!important;background:#F8FAFC!important}
-body{overflow:hidden!important;background:#F8FAFC!important}
-.pg{width:1600px!important;transform-origin:top left}
+body{overflow:visible!important;background:#F8FAFC!important}
+.pg{max-width:480px;margin:0 auto}
+.pg-slot{height:auto!important;padding:2px 0}
 
 .slc{position:relative;font-family:'Segoe UI',system-ui,sans-serif}
 .slc-btn{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E9EDF3;border-radius:10px;padding:8px 12px;font-size:12px;color:#0F172A;cursor:pointer;box-shadow:0 2px 8px rgba(15,23,42,.05);white-space:nowrap}
@@ -1744,20 +1841,8 @@ body{overflow:hidden!important;background:#F8FAFC!important}
 .slc-cb.on{background:#6366F1;border-color:#6366F1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");background-size:10px;background-position:center;background-repeat:no-repeat}
 .slc-yr{font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em;padding:8px 9px 2px}
 
+.slc-btn{padding:6px 10px;font-size:11px}
+.slc-pop{max-height:260px}
 </style>
-<script>
-(function(){
-  function fit(){
-    var pg=document.querySelector('.pg');
-    if(!pg)return;
-    var s=Math.min(1,document.documentElement.clientWidth/1600);
-    pg.style.transform='scale('+s+')';
-    document.body.style.height=(pg.scrollHeight*s)+'px';
-  }
-  window.addEventListener('resize',fit);
-  window.addEventListener('load',function(){fit();setTimeout(fit,600);});
-  fit();
-})();
-</script>
 </body>
 </html>

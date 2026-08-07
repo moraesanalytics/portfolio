@@ -39,5 +39,6 @@ export interface FeaturedProject {
   highlights: ProjectHighlight[];
   repositoryUrl: string;
   demoUrl: string;
+  demoMobileUrl: string;
   stats: { label: string; value: string }[];
 }
